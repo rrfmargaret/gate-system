@@ -991,10 +991,10 @@ function captureOCR() {
 
 // ---- GOOGLE SHEETS INTEGRATION ----
 // Paste your deployed Apps Script URL here after deployment
-const SHEET_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbz_iePiuWHa3O5-cAZm-9zya9rCMlqGaz4mXaT2wLm4GJZfPRWb5vgDxx04L9DRmJDg/exec';
 
 async function sendToGoogleSheets(entry) {
-  if (!SHEET_URL || SHEET_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+  if (!SHEET_URL || SHEET_URL === 'https://script.google.com/macros/s/AKfycbz_iePiuWHa3O5-cAZm-9zya9rCMlqGaz4mXaT2wLm4GJZfPRWb5vgDxx04L9DRmJDg/exec') {
     document.getElementById('sync-status').textContent = 'Saved locally (no server)';
     return;
   }
