@@ -647,8 +647,8 @@
         <input class="chip-input" type="radio" name="simtype" id="sim-b2" value="SIM B2">
         <label class="chip-label" for="sim-b2">SIM B2</label>
 
-        <input class="chip-input" type="radio" name="simtype" id="sim-c" value="SIM C">
-        <label class="chip-label" for="sim-c">SIM C</label>
+        <input class="chip-input" type="radio" name="simtype" id="sim-c" value="KTP">
+        <label class="chip-label" for="sim-c">KTP</label>
       </div>
     </div>
 
@@ -990,17 +990,15 @@ function captureOCR() {
 }
 
 // ---- GOOGLE SHEETS INTEGRATION ----
-// Paste your deployed Apps Script URL here after deployment
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbz_iePiuWHa3O5-cAZm-9zya9rCMlqGaz4mXaT2wLm4GJZfPRWb5vgDxx04L9DRmJDg/exec';
 
 async function sendToGoogleSheets(entry) {
-  if (!SHEET_URL || SHEET_URL === 'https://script.google.com/macros/s/AKfycbz_iePiuWHa3O5-cAZm-9zya9rCMlqGaz4mXaT2wLm4GJZfPRWb5vgDxx04L9DRmJDg/exec') {
+  if (!SHEET_URL || SHEET_URL.includes('YOUR_GOOGLE')) {
     document.getElementById('sync-status').textContent = 'Saved locally (no server)';
     return;
   }
   document.getElementById('sync-status').textContent = 'Syncing...';
   try {
-    // Apps Script requires no-cors due to redirect handling
     await fetch(SHEET_URL, {
       method: 'POST',
       mode: 'no-cors',
@@ -1015,7 +1013,7 @@ async function sendToGoogleSheets(entry) {
 }
 
 async function pingServer() {
-  if (!SHEET_URL || SHEET_URL === 'https://script.google.com/macros/s/AKfycbz_iePiuWHa3O5-cAZm-9zya9rCMlqGaz4mXaT2wLm4GJZfPRWb5vgDxx04L9DRmJDg/exec') return;
+  if (!SHEET_URL || SHEET_URL.includes('YOUR_GOOGLE')) return;
   try {
     const res = await fetch(SHEET_URL + '?action=ping');
     const json = await res.json();
