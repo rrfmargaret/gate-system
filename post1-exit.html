@@ -889,8 +889,8 @@ async function searchVehicle() {
   if (serverResult) {
     if (serverResult.status === 'found') {
       const record = serverResult.record;
-      // Ensure fullTimeIn is reconstructed for duration calc
-      record.fullTimeIn = record.date + ', ' + record.timeIn;
+      // fullTimeIn is stored as ISO string — use directly
+      if (!record.fullTimeIn) record.fullTimeIn = new Date().toISOString();
       populateCard(record);
       document.getElementById('sync-status').textContent = 'Found on server';
       return;
@@ -968,15 +968,11 @@ function startDurationTicker(fullTimeInStr) {
 
 function parseFullTimestamp(str) {
   if (!str) return null;
-  // format: DD/MM/YYYY, HH.MM.SS or HH:MM:SS
   try {
-    const parts = str.split(', ');
-    const dateParts = parts[0].split('/');
-    const timeParts = parts[1].replace(/\./g, ':').split(':');
-    return new Date(
-      parseInt(dateParts[2]), parseInt(dateParts[1])-1, parseInt(dateParts[0]),
-      parseInt(timeParts[0]), parseInt(timeParts[1]), parseInt(timeParts[2])
-    );
+    // Handles ISO format: "2026-03-25T13:51:42.000Z"
+    const d = new Date(str);
+    if (!isNaN(d.getTime())) return d;
+    return null;
   } catch { return null; }
 }
 
@@ -987,10 +983,7 @@ function getTimestamp() {
 }
 
 function getFullTimestamp() {
-  return new Date().toLocaleString('id-ID', {
-    day:'2-digit', month:'2-digit', year:'numeric',
-    hour:'2-digit', minute:'2-digit', second:'2-digit', hour12: false
-  });
+  return new Date().toISOString();
 }
 
 function calcDuration(fullTimeInStr) {
