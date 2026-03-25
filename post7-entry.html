@@ -21,6 +21,38 @@
     --radius: 6px;
   }
 
+  body.light {
+    --bg: #f0f2f5;
+    --surface: #ffffff;
+    --surface2: #e8eaf0;
+    --border: #d0d4e0;
+    --accent: #d4920a;
+    --accent2: #e05c1a;
+    --green: #1a9e5a;
+    --red: #d03030;
+    --text: #1a1c24;
+    --muted: #6b7280;
+    --input-bg: #f8f9fc;
+  }
+
+  /* Theme toggle */
+  .theme-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, border-color 0.15s;
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover { border-color: var(--accent); }
+  .theme-toggle svg { width: 18px; height: 18px; }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
@@ -571,6 +603,41 @@
     border-radius: 3px;
   }
 
+  /* Credits footer */
+  .credits {
+    text-align: center;
+    padding: 12px 24px;
+    background: var(--bg);
+  }
+
+  .credits-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px 4px 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .credits-badge:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .credits-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+
   @media (max-width: 600px) {
     .fields-grid { grid-template-columns: 1fr; }
     .plate-input { font-size: 24px; letter-spacing: 4px; }
@@ -592,9 +659,19 @@
       <div class="header-subtitle">Gate Access Control System</div>
     </div>
   </div>
-  <div>
-    <div class="clock" id="clock">--:--:--</div>
-    <div class="clock-date" id="clock-date">---</div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div>
+      <div class="clock" id="clock">--:--:--</div>
+      <div class="clock-date" id="clock-date">---</div>
+    </div>
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+      <svg id="theme-icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block">
+        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <svg id="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
   </div>
 </header>
 
@@ -763,6 +840,14 @@
   </div>
 </div>
 
+<!-- Credits -->
+<footer class="credits">
+  <span class="credits-badge">
+    <span class="credits-dot"></span>
+    Built by rrfmargaret
+  </span>
+</footer>
+
 <!-- OCR Modal -->
 <div class="modal-overlay" id="ocr-modal">
   <div class="modal">
@@ -784,6 +869,24 @@
 </div>
 
 <script>
+// ---- THEME TOGGLE ----
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light');
+  localStorage.setItem('gate_theme', isLight ? 'light' : 'dark');
+  document.getElementById('theme-icon-dark').style.display = isLight ? 'none' : 'block';
+  document.getElementById('theme-icon-light').style.display = isLight ? 'block' : 'none';
+}
+
+// Apply saved theme on load
+(function() {
+  const saved = localStorage.getItem('gate_theme');
+  if (saved === 'light') {
+    document.body.classList.add('light');
+    document.getElementById('theme-icon-dark').style.display = 'none';
+    document.getElementById('theme-icon-light').style.display = 'block';
+  }
+})();
+
 // ---- CLOCK ----
 function updateClock() {
   const now = new Date();
