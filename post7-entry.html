@@ -438,6 +438,124 @@
   body.light .shipment-input:checked + .shipment-label { background: #dbeafe; border-color: #2563eb; color: #1d4ed8; }
   body.light .annot-input:checked + .annot-label { background: #fde8e8; }
 
+  /* Autofill dropdown */
+  .plate-section { position: relative; }
+
+  .autofill-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0; right: 0;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    z-index: 50;
+    max-height: 280px;
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  .autofill-dropdown.open { display: block; }
+
+  .autofill-header {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding: 8px 14px 4px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .autofill-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: background 0.12s;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .autofill-item:last-child { border-bottom: none; }
+  .autofill-item:hover, .autofill-item.highlighted { background: var(--surface2); }
+
+  .autofill-plate {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 15px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    min-width: 110px;
+    flex-shrink: 0;
+  }
+
+  .autofill-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .autofill-driver {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .autofill-sub {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .autofill-count {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  /* Autofill banner — shown after fill */
+  .autofill-banner {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: #1a2a0a;
+    border: 1px solid var(--green);
+    border-radius: var(--radius);
+    padding: 8px 14px;
+    margin-top: 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--green);
+  }
+  .autofill-banner.show { display: flex; }
+  body.light .autofill-banner { background: #e8f5e9; }
+
+  .autofill-banner-clear {
+    background: transparent;
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .autofill-banner-clear:hover { background: var(--green); color: #000; }
+
   /* Bottom action bar */
   .action-bar {
     background: var(--surface);
@@ -786,7 +904,12 @@
   <div class="plate-section">
     <div class="plate-row">
       <div class="plate-input-wrap">
-        <input type="text" class="plate-input" id="plate" placeholder="B 1234 XX" maxlength="12" autocomplete="off" spellcheck="false">
+        <input type="text" class="plate-input" id="plate" placeholder="B 1234 XX" maxlength="12"
+          autocomplete="off" spellcheck="false"
+          oninput="onPlateInput(this)"
+          onkeydown="onPlateKeydown(event)"
+          onfocus="onPlateFocus()"
+          onblur="onPlateBlur()">
       </div>
       <button class="ocr-btn" onclick="openOCR()" title="Scan plate with camera">
         <svg class="ocr-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -796,6 +919,18 @@
         </svg>
         SCAN
       </button>
+    </div>
+
+    <!-- Autofill dropdown -->
+    <div class="autofill-dropdown" id="autofill-dropdown">
+      <div class="autofill-header">Riwayat Kendaraan — Klik untuk autofill</div>
+      <div id="autofill-list"></div>
+    </div>
+
+    <!-- Autofill banner -->
+    <div class="autofill-banner" id="autofill-banner">
+      <span id="autofill-banner-msg">✓ Data diisi dari riwayat kendaraan</span>
+      <button class="autofill-banner-clear" onclick="clearAutofill()">Bersihkan</button>
     </div>
   </div>
 
@@ -1040,6 +1175,184 @@
 </div>
 
 <script>
+// ============================================================
+// AUTOFILL SYSTEM
+// ============================================================
+
+// Build a registry of known vehicles from ALL past logs (across days)
+function getVehicleRegistry() {
+  const registry = {};
+  // Scan all localStorage keys for gate_log entries
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (!key.startsWith('gate_log_')) continue;
+    try {
+      const logs = JSON.parse(localStorage.getItem(key) || '[]');
+      logs.forEach(entry => {
+        if (!entry.plate) return;
+        const plate = entry.plate.toUpperCase().trim();
+        if (!registry[plate]) {
+          registry[plate] = { plate, entries: [] };
+        }
+        registry[plate].entries.push(entry);
+      });
+    } catch {}
+  }
+  // For each plate, pick the most recent entry as the template
+  Object.values(registry).forEach(v => {
+    v.entries.sort((a, b) => (b.id || 0) - (a.id || 0));
+    v.latest = v.entries[0];
+    v.count  = v.entries.length;
+  });
+  return registry;
+}
+
+let afHighlight = -1;
+let afItems = [];
+
+function onPlateInput(el) {
+  el.value = el.value.toUpperCase();
+  showAutofillDropdown(el.value.trim());
+}
+
+function onPlateFocus() {
+  const val = document.getElementById('plate').value.trim();
+  showAutofillDropdown(val);
+}
+
+function onPlateBlur() {
+  // Delay so click on dropdown item fires first
+  setTimeout(() => closeAutofillDropdown(), 200);
+}
+
+function onPlateKeydown(e) {
+  const dd = document.getElementById('autofill-dropdown');
+  if (!dd.classList.contains('open')) return;
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    afHighlight = Math.min(afHighlight + 1, afItems.length - 1);
+    renderAutofillHighlight();
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    afHighlight = Math.max(afHighlight - 1, 0);
+    renderAutofillHighlight();
+  } else if (e.key === 'Enter' || e.key === 'Tab') {
+    if (afHighlight >= 0 && afItems[afHighlight]) {
+      e.preventDefault();
+      applyAutofill(afItems[afHighlight].plate);
+    }
+  } else if (e.key === 'Escape') {
+    closeAutofillDropdown();
+  }
+}
+
+function renderAutofillHighlight() {
+  document.querySelectorAll('.autofill-item').forEach((el, i) => {
+    el.classList.toggle('highlighted', i === afHighlight);
+  });
+}
+
+function showAutofillDropdown(query) {
+  const registry = getVehicleRegistry();
+  const allPlates = Object.values(registry).sort((a, b) => (b.latest.id || 0) - (a.latest.id || 0));
+
+  // Filter by query
+  const filtered = query.length === 0
+    ? allPlates.slice(0, 8)  // show 8 most recent if no query
+    : allPlates.filter(v => v.plate.includes(query)).slice(0, 8);
+
+  if (filtered.length === 0) {
+    closeAutofillDropdown();
+    return;
+  }
+
+  afItems = filtered;
+  afHighlight = -1;
+
+  const list = document.getElementById('autofill-list');
+  list.innerHTML = filtered.map((v, i) => {
+    const e = v.latest;
+    const dest  = e.dest  || '—';
+    const vtype = e.vtype || '—';
+    const company = e.company || '—';
+    return `
+      <div class="autofill-item" onmousedown="applyAutofill('${v.plate}')" data-idx="${i}">
+        <span class="autofill-plate">${v.plate}</span>
+        <div class="autofill-info">
+          <div class="autofill-driver">${e.driver || '—'} &nbsp;<span style="color:var(--muted);font-weight:400">${company}</span></div>
+          <div class="autofill-sub">${vtype} · ${dest} · SIM: ${e.simtype || '—'}</div>
+        </div>
+        <span class="autofill-count">${v.count}×</span>
+      </div>`;
+  }).join('');
+
+  document.getElementById('autofill-dropdown').classList.add('open');
+}
+
+function closeAutofillDropdown() {
+  document.getElementById('autofill-dropdown').classList.remove('open');
+  afHighlight = -1;
+}
+
+function applyAutofill(plate) {
+  const registry = getVehicleRegistry();
+  const v = registry[plate.toUpperCase()];
+  if (!v || !v.latest) return;
+  const e = v.latest;
+
+  // Fill plate
+  document.getElementById('plate').value = e.plate;
+
+  // Fill text fields
+  document.getElementById('driver').value     = e.driver     || '';
+  document.getElementById('company').value    = e.company    || '';
+  document.getElementById('ktp').value        = e.ktp        || '';
+  document.getElementById('driver-card').value = e.driverCard || '';
+  document.getElementById('products').value   = e.products   || '';
+  document.getElementById('details').value    = e.details    || '';
+
+  // Fill SIM type
+  document.querySelectorAll('input[name="simtype"]').forEach(r => {
+    r.checked = (r.value === e.simtype);
+  });
+
+  // Fill vehicle type
+  document.querySelectorAll('input[name="vtype"]').forEach(r => {
+    r.checked = (r.value === e.vtype);
+  });
+
+  // Fill destination
+  document.querySelectorAll('input[name="dest"]').forEach(r => {
+    r.checked = (r.value === e.dest);
+  });
+
+  // Fill shipment
+  document.querySelectorAll('input[name="shipment"]').forEach(r => {
+    r.checked = e.shipment && e.shipment.includes(r.value);
+  });
+
+  // Do NOT autofill annotations — those are per-trip exceptions
+  document.querySelectorAll('.annot-input').forEach(r => r.checked = false);
+  toggleAnnotPanel();
+
+  // Show banner
+  const banner = document.getElementById('autofill-banner');
+  document.getElementById('autofill-banner-msg').textContent =
+    `✓ Diisi dari riwayat: ${e.plate} — ${e.driver || ''} (${v.count}× kunjungan)`;
+  banner.classList.add('show');
+
+  closeAutofillDropdown();
+
+  // Focus driver field so guard can verify/edit
+  setTimeout(() => document.getElementById('driver').focus(), 50);
+}
+
+function clearAutofill() {
+  document.getElementById('autofill-banner').classList.remove('show');
+  resetForm();
+}
+
 // ---- THEME TOGGLE ----
 function toggleTheme() {
   const isLight = document.body.classList.toggle('light');
@@ -1296,11 +1609,11 @@ function captureOCR() {
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
   canvas.getContext('2d').drawImage(video, 0, 0);
-  // Note: Real OCR requires Tesseract.js or a backend API
-  // For now, prompt user to confirm what was captured
   const result = prompt('OCR captured. Please type/confirm the plate number:');
   if (result) {
-    document.getElementById('plate').value = result.toUpperCase();
+    const plate = result.toUpperCase();
+    document.getElementById('plate').value = plate;
+    showAutofillDropdown(plate);
   }
   closeOCR();
 }
