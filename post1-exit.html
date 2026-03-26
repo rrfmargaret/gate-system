@@ -662,6 +662,265 @@
     cursor: pointer;
   }
 
+  /* Mode toggle */
+  .mode-toggle-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: 16px;
+    width: fit-content;
+  }
+
+  .mode-btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--muted);
+    transition: all 0.18s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .mode-btn.active {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+  }
+
+  .mode-btn.active.auto { color: var(--accent); }
+  .mode-btn.active.manual { color: #4a9eff; }
+
+  /* Bulk manual panel */
+  .bulk-panel {
+    display: none;
+    background: var(--surface);
+    border: 1px solid #2a4a7a;
+    border-top: 3px solid #4a9eff;
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .bulk-panel.show { display: block; }
+
+  .bulk-time-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .bulk-time-wrap { flex: 0 0 auto; }
+
+  .bulk-time-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #4a9eff;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .bulk-time-input {
+    background: var(--input-bg);
+    border: 2px solid #4a9eff;
+    color: #4a9eff;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 28px;
+    letter-spacing: 4px;
+    text-align: center;
+    padding: 10px 16px;
+    border-radius: var(--radius);
+    outline: none;
+    width: 160px;
+  }
+
+  .bulk-time-input:focus { box-shadow: 0 0 0 3px rgba(74,158,255,0.15); }
+
+  .btn-use-now {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+    height: 54px;
+  }
+
+  .btn-use-now:hover { border-color: #4a9eff; color: #4a9eff; }
+
+  /* Bulk plate list */
+  .bulk-plates-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .bulk-plate-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .bulk-plate-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .bulk-row-time {
+    background: var(--input-bg);
+    border: 1px solid #2a4a7a;
+    color: #4a9eff;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 15px;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 10px 8px;
+    border-radius: var(--radius);
+    outline: none;
+    width: 110px;
+    flex-shrink: 0;
+    transition: border-color 0.2s;
+  }
+  .bulk-row-time:focus { border-color: #4a9eff; box-shadow: 0 0 0 2px rgba(74,158,255,0.12); }
+
+  .bulk-row-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    min-width: 20px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .bulk-plate-field {
+    flex: 1;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 16px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .bulk-plate-field:focus { border-color: #4a9eff; }
+  .bulk-plate-field::placeholder { color: var(--muted); letter-spacing: 2px; font-size: 14px; }
+
+  .bulk-plate-status {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    min-width: 80px;
+    text-align: center;
+    padding: 4px 10px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: var(--surface2);
+  }
+
+  .bulk-plate-status.found { background: #0a2e1a; border-color: var(--accent); color: var(--accent); }
+  .bulk-plate-status.not-found { background: #2e0a0a; border-color: var(--red); color: var(--red); }
+  .bulk-plate-status.logged { background: #0a1a2e; border-color: #4a9eff; color: #4a9eff; }
+
+  .btn-remove-row {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 32px; height: 32px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .btn-remove-row:hover { border-color: var(--red); color: var(--red); }
+
+  .btn-add-plate {
+    background: transparent;
+    border: 1px dashed var(--border);
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.15s;
+  }
+  .btn-add-plate:hover { border-color: #4a9eff; color: #4a9eff; }
+
+  .bulk-summary {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .bulk-summary span { color: #4a9eff; font-weight: 700; }
+
+  .btn-bulk-submit {
+    background: #4a9eff;
+    border: none;
+    color: #000;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 13px 30px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    width: 100%;
+    justify-content: center;
+  }
+  .btn-bulk-submit:hover { background: #74b4ff; }
+  .btn-bulk-submit:active { transform: scale(0.98); }
+  .btn-bulk-submit:disabled { background: var(--surface2); color: var(--muted); cursor: not-allowed; }
+
   /* Credits footer */
   .credits {
     text-align: center;
@@ -741,6 +1000,45 @@
 <!-- Main -->
 <main class="main">
 
+  <!-- Mode Toggle -->
+  <div class="mode-toggle-bar">
+    <button class="mode-btn active auto" id="btn-mode-auto" onclick="setMode('auto')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      AUTO
+    </button>
+    <button class="mode-btn manual" id="btn-mode-manual" onclick="setMode('manual')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      MANUAL BULK
+    </button>
+  </div>
+
+  <!-- BULK MANUAL PANEL -->
+  <div class="bulk-panel" id="bulk-panel">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:#4a9eff;text-transform:uppercase">
+        Daftar Kendaraan Keluar — Tiap baris bisa beda jam
+      </div>
+      <button class="btn-use-now" onclick="fillAllNow()" style="height:36px;font-size:11px">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Isi Semua Jam Sekarang
+      </button>
+    </div>
+
+    <div class="bulk-plate-list" id="bulk-plate-list">
+      <!-- rows added dynamically -->
+    </div>
+    <button class="btn-add-plate" onclick="addBulkRow()">+ Tambah Kendaraan</button>
+
+    <div class="bulk-summary" id="bulk-summary"></div>
+
+    <button class="btn-bulk-submit" id="btn-bulk-submit" onclick="submitBulk()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22v-20M2 12l10 10 10-10"/></svg>
+      LOG EXIT SEMUA
+    </button>
+  </div>
+
+  <!-- AUTO MODE SECTION -->
+  <div id="auto-section">
   <!-- Search by plate -->
   <div class="section-label">Search Vehicle by License Plate</div>
   <div class="search-section">
@@ -831,6 +1129,8 @@
       <div class="time-out-value" id="timeout-preview">--:--:--</div>
     </div>
   </div>
+
+  </div><!-- end auto-section -->
 
   <!-- Today's exit log -->
   <div class="log-section">
@@ -1059,14 +1359,14 @@ function startDurationTicker(fullTimeInStr) {
     const inTime = parseFullTimestamp(fullTimeInStr);
     if (!inTime) return;
     const diffMs = now - inTime;
+    if (diffMs < 0) return;
     const h = Math.floor(diffMs / 3600000);
     const m = Math.floor((diffMs % 3600000) / 60000);
     const s = Math.floor((diffMs % 60000) / 1000);
     document.getElementById('duration-value').textContent =
       `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    const now2 = new Date();
     document.getElementById('timeout-preview').textContent =
-      `${String(now2.getHours()).padStart(2,'0')}:${String(now2.getMinutes()).padStart(2,'0')}:${String(now2.getSeconds()).padStart(2,'0')}`;
+      `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
   }, 1000);
 }
 
@@ -1090,11 +1390,12 @@ function getFullTimestamp() {
   return new Date().toISOString();
 }
 
-function calcDuration(fullTimeInStr) {
+function calcDuration(fullTimeInStr, fullTimeOutStr) {
   const inTime = parseFullTimestamp(fullTimeInStr);
-  if (!inTime) return '—';
-  const now = new Date();
-  const diffMs = now - inTime;
+  const outTime = fullTimeOutStr ? parseFullTimestamp(fullTimeOutStr) : new Date();
+  if (!inTime || !outTime) return '—';
+  const diffMs = outTime - inTime;
+  if (diffMs < 0) return '—';
   const h = Math.floor(diffMs / 3600000);
   const m = Math.floor((diffMs % 3600000) / 60000);
   const s = Math.floor((diffMs % 60000) / 1000);
@@ -1106,7 +1407,8 @@ function logExit() {
 
   const timeOut = getTimestamp();
   const fullTimeOut = getFullTimestamp();
-  const duration = calcDuration(currentRecord.fullTimeIn);
+  // Calculate duration using exact OUT timestamp vs IN timestamp
+  const duration = calcDuration(currentRecord.fullTimeIn, fullTimeOut);
 
   // Update the entry log
   const logs = getLogs();
@@ -1120,11 +1422,11 @@ function logExit() {
 
   // Save to exit log
   const exitLogs = getExitLogs();
-  exitLogs.push({ ...currentRecord, timeOut, fullTimeOut, duration });
+  const exitEntry = { ...currentRecord, timeOut, fullTimeOut, duration };
+  exitLogs.push(exitEntry);
   saveExitLogs(exitLogs);
 
-  // TODO: sync to Google Sheets
-  sendExitToGoogleSheets(logs[idx] || { ...currentRecord, timeOut, fullTimeOut, duration });
+  sendExitToGoogleSheets(logs[idx] || exitEntry);
 
   clearInterval(durationInterval);
   renderExitLog();
@@ -1144,11 +1446,17 @@ function renderExitLog() {
     return;
   }
 
-  tbody.innerHTML = logs.slice().reverse().map(e => `
+  tbody.innerHTML = logs.slice().reverse().map(e => {
+    // Use stored duration; if invalid (NaN or old data), recalculate from timestamps
+    let dur = e.duration;
+    if (!dur || dur === '—' || dur.includes('NaN')) {
+      dur = calcDuration(e.fullTimeIn, e.fullTimeOut) ;
+    }
+    return `
     <tr>
       <td style="font-family:'Share Tech Mono',monospace;color:#9ca3af;font-size:12px">${e.timeIn}</td>
       <td style="font-family:'Share Tech Mono',monospace;color:var(--accent);font-size:12px">${e.timeOut}</td>
-      <td class="duration-cell">${e.duration}</td>
+      <td class="duration-cell">${dur}</td>
       <td class="plate-cell">${e.plate}</td>
       <td>${e.driver}</td>
       <td style="color:var(--muted)">${e.company}</td>
@@ -1156,7 +1464,7 @@ function renderExitLog() {
       <td style="color:#9ca3af">${e.dest}</td>
       <td><span class="status-out">OUT</span></td>
     </tr>
-  `).join('');
+  `}).join('');
 }
 
 renderExitLog();
@@ -1278,6 +1586,202 @@ async function pingServer() {
 }
 
 pingServer();
+
+// ============================================================
+// MODE TOGGLE — AUTO vs MANUAL BULK
+// ============================================================
+let currentMode = 'auto';
+
+function setMode(mode) {
+  currentMode = mode;
+  const autoSec = document.getElementById('auto-section');
+  const bulkPanel = document.getElementById('bulk-panel');
+  const btnAuto = document.getElementById('btn-mode-auto');
+  const btnManual = document.getElementById('btn-mode-manual');
+  const actionLogExit = document.getElementById('btn-logout');
+
+  if (mode === 'auto') {
+    autoSec.style.display = '';
+    bulkPanel.classList.remove('show');
+    btnAuto.classList.add('active');
+    btnManual.classList.remove('active');
+    actionLogExit.style.display = '';
+  } else {
+    autoSec.style.display = 'none';
+    bulkPanel.classList.add('show');
+    btnAuto.classList.remove('active');
+    btnManual.classList.add('active');
+    actionLogExit.style.display = 'none';
+    // Ensure at least 3 rows
+    const list = document.getElementById('bulk-plate-list');
+    if (list.children.length === 0) {
+      addBulkRow(); addBulkRow(); addBulkRow();
+    }
+    updateBulkSummary();
+  }
+}
+
+// ---- FILL ALL ROWS WITH CURRENT TIME ----
+function getNowHHMM() {
+  const now = new Date();
+  return `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+}
+
+function fillAllNow() {
+  const t = getNowHHMM();
+  document.querySelectorAll('.bulk-row-time').forEach(el => { if (!el.disabled) el.value = t; });
+}
+
+// Keep backward compat
+function useNowTime() { fillAllNow(); }
+
+// ---- ADD A PLATE ROW ----
+let bulkRowId = 0;
+function addBulkRow() {
+  const list = document.getElementById('bulk-plate-list');
+  const id = ++bulkRowId;
+  const rowNum = list.children.length + 1;
+  const nowVal = getNowHHMM();
+
+  const row = document.createElement('div');
+  row.className = 'bulk-plate-row';
+  row.id = `bulk-row-${id}`;
+  row.innerHTML = `
+    <span class="bulk-row-num">${rowNum}</span>
+    <input type="text" class="bulk-plate-field" id="bulk-plate-${id}"
+      placeholder="B 1234 XX" maxlength="12" autocomplete="off" spellcheck="false"
+      oninput="this.value=this.value.toUpperCase(); checkBulkPlate(${id})"
+      onkeydown="if(event.key==='Enter'){addBulkRow();setTimeout(()=>document.getElementById('bulk-plate-${id+1}')?.focus(),50)}">
+    <input type="time" class="bulk-row-time" id="bulk-time-${id}" value="${nowVal}" step="60" title="Jam keluar kendaraan ini">
+    <span class="bulk-plate-status" id="bulk-status-${id}">—</span>
+    <button class="btn-remove-row" onclick="removeBulkRow(${id})" title="Hapus">✕</button>
+  `;
+  list.appendChild(row);
+  updateBulkSummary();
+  return id;
+}
+
+function removeBulkRow(id) {
+  const row = document.getElementById(`bulk-row-${id}`);
+  if (row) row.remove();
+  // Re-number
+  document.querySelectorAll('.bulk-row-num').forEach((el, i) => { el.textContent = i + 1; });
+  updateBulkSummary();
+}
+
+// ---- CHECK PLATE AGAINST localStorage ----
+function checkBulkPlate(id) {
+  const val = document.getElementById(`bulk-plate-${id}`)?.value.trim().toUpperCase();
+  const statusEl = document.getElementById(`bulk-status-${id}`);
+  if (!statusEl) return;
+
+  if (!val || val.length < 3) {
+    statusEl.textContent = '—';
+    statusEl.className = 'bulk-plate-status';
+    updateBulkSummary();
+    return;
+  }
+
+  const logs = getLogs();
+  const record = logs.find(e => e.plate === val && !e.timeOut);
+  if (record) {
+    statusEl.textContent = '✓ FOUND';
+    statusEl.className = 'bulk-plate-status found';
+  } else {
+    const alreadyOut = logs.find(e => e.plate === val && e.timeOut);
+    if (alreadyOut) {
+      statusEl.textContent = 'SUDAH OUT';
+      statusEl.className = 'bulk-plate-status logged';
+    } else {
+      statusEl.textContent = '✗ TIDAK ADA';
+      statusEl.className = 'bulk-plate-status not-found';
+    }
+  }
+  updateBulkSummary();
+}
+
+// ---- UPDATE SUMMARY COUNT ----
+function updateBulkSummary() {
+  const rows = document.querySelectorAll('.bulk-plate-row');
+  const found = document.querySelectorAll('.bulk-plate-status.found').length;
+  const notFound = document.querySelectorAll('.bulk-plate-status.not-found').length;
+  const el = document.getElementById('bulk-summary');
+  el.innerHTML = `Total baris: <span>${rows.length}</span> &nbsp;|&nbsp; Siap diproses: <span>${found}</span> &nbsp;|&nbsp; Tidak ditemukan: <span style="color:var(--red)">${notFound}</span>`;
+}
+
+// ---- SUBMIT BULK EXIT ----
+async function submitBulk() {
+  const rows = document.querySelectorAll('.bulk-plate-row');
+  let successCount = 0;
+  let skipCount = 0;
+  let missingTime = 0;
+
+  const logs = getLogs();
+  const exitLogs = getExitLogs();
+
+  rows.forEach(row => {
+    const id = row.id.replace('bulk-row-', '');
+    const plateEl = document.getElementById(`bulk-plate-${id}`);
+    const timeEl  = document.getElementById(`bulk-time-${id}`);
+    const statusEl = document.getElementById(`bulk-status-${id}`);
+    if (!plateEl || plateEl.disabled) return;
+
+    const plate = plateEl.value.trim().toUpperCase();
+    if (!plate) return;
+
+    const timeVal = timeEl ? timeEl.value : '';
+    if (!timeVal) { missingTime++; if (statusEl) { statusEl.textContent = '! JAM?'; statusEl.className = 'bulk-plate-status not-found'; } return; }
+
+    const [hh, mm] = timeVal.split(':');
+    const now = new Date();
+    const outDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(),
+      parseInt(hh), parseInt(mm), 0, 0);
+    const timeOut   = `${hh}:${mm}:00`;
+    const fullTimeOut = outDate.toISOString();
+
+    const idx = logs.findIndex(e => e.plate === plate && !e.timeOut);
+    if (idx === -1) { skipCount++; return; }
+
+    const duration = calcDuration(logs[idx].fullTimeIn, fullTimeOut);
+    logs[idx].timeOut    = timeOut;
+    logs[idx].fullTimeOut = fullTimeOut;
+    logs[idx].duration   = duration;
+
+    const exitEntry = { ...logs[idx] };
+    exitLogs.push(exitEntry);
+    sendExitToGoogleSheets(exitEntry);
+
+    if (statusEl) { statusEl.textContent = '✓ LOGGED'; statusEl.className = 'bulk-plate-status logged'; }
+    if (plateEl)  { plateEl.disabled = true; }
+    if (timeEl)   { timeEl.disabled  = true; }
+
+    successCount++;
+  });
+
+  saveLogs(logs);
+  saveExitLogs(exitLogs);
+  renderExitLog();
+
+  if (missingTime > 0) showToastError(`${missingTime} baris tidak ada jam keluar — dilewati`);
+  if (successCount > 0) showToast(`✓ ${successCount} kendaraan berhasil di-log OUT`);
+  if (skipCount > 0) setTimeout(() => showToastError(`${skipCount} plat dilewati (tidak ditemukan/sudah out)`), 1500);
+
+  // After 2s clear logged rows
+  setTimeout(() => {
+    document.querySelectorAll('.bulk-plate-status.logged').forEach(el => {
+      const rowId = el.id.replace('bulk-status-','');
+      const pEl = document.getElementById(`bulk-plate-${rowId}`);
+      const tEl = document.getElementById(`bulk-time-${rowId}`);
+      if (pEl) { pEl.value = ''; pEl.disabled = false; }
+      if (tEl) { tEl.value = getNowHHMM(); tEl.disabled = false; }
+      el.textContent = '—';
+      el.className = 'bulk-plate-status';
+    });
+    // Re-number
+    document.querySelectorAll('.bulk-row-num').forEach((el, i) => { el.textContent = i + 1; });
+    updateBulkSummary();
+  }, 2000);
+}
 </script>
 </body>
 </html>

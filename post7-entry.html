@@ -335,6 +335,109 @@
 
   .dest-label:hover { border-color: #555; color: var(--text); }
 
+  /* Shipment status chips */
+  .shipment-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .shipment-input { display: none; }
+  .shipment-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    background: var(--input-bg);
+    color: var(--muted);
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .shipment-input:checked + .shipment-label {
+    background: #1a2a4a;
+    border-color: #4a9eff;
+    color: #4a9eff;
+  }
+  .shipment-label:hover { border-color: #555; color: var(--text); }
+
+  /* Annotation chips — multi-select checkboxes */
+  .annot-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .annot-input { display: none; }
+  .annot-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    background: var(--input-bg);
+    color: var(--muted);
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .annot-input:checked + .annot-label {
+    background: #2e0a0a;
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .annot-label:hover { border-color: var(--red); color: var(--red); }
+
+  /* Annotation panel — hidden until a label is checked */
+  .annot-approval {
+    margin-top: 10px;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .annot-approval.show { display: flex; }
+
+  /* Textarea */
+  textarea {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+    min-height: 72px;
+    line-height: 1.5;
+  }
+  textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(240,165,0,0.12);
+  }
+  textarea::placeholder { color: var(--muted); font-size: 13px; }
+
+  /* Annotation warning banner */
+  .annot-warning {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: #2e0a0a;
+    border: 1px solid var(--red);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--red);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .annot-warning.show { display: flex; }
+  body.light .annot-warning { background: #fde8e8; }
+  body.light .shipment-input:checked + .shipment-label { background: #dbeafe; border-color: #2563eb; color: #1d4ed8; }
+  body.light .annot-input:checked + .annot-label { background: #fde8e8; }
+
   /* Bottom action bar */
   .action-bar {
     background: var(--surface);
@@ -794,6 +897,65 @@
       </div>
     </div>
 
+    <!-- Shipment Status -->
+    <div class="field-card full">
+      <label>Shipment Status</label>
+      <div class="shipment-chips">
+        <input class="shipment-input" type="checkbox" name="shipment" id="sh-loading" value="Loading">
+        <label class="shipment-label" for="sh-loading">&#9650; Loading</label>
+
+        <input class="shipment-input" type="checkbox" name="shipment" id="sh-unloading" value="Unloading">
+        <label class="shipment-label" for="sh-unloading">&#9660; Unloading</label>
+      </div>
+    </div>
+
+    <!-- Products -->
+    <div class="field-card full">
+      <label>Products / Cargo</label>
+      <textarea id="products" placeholder="Contoh: Palm Oil 20 ton, Spare Parts, Raw Material..."></textarea>
+    </div>
+
+    <!-- Details -->
+    <div class="field-card full">
+      <label>Details / Keterangan Lain</label>
+      <textarea id="details" placeholder="Informasi tambahan mengenai kendaraan atau muatan..."></textarea>
+    </div>
+
+    <!-- Annotation -->
+    <div class="field-card full">
+      <label>Annotation — Dokumen Bermasalah <span style="color:var(--muted);font-size:10px;letter-spacing:1px;font-weight:400">(OPSIONAL)</span></label>
+      <div class="annot-chips">
+        <input class="annot-input" type="checkbox" id="an-sim-exp" value="SIM EXPIRED">
+        <label class="annot-label" for="an-sim-exp">SIM EXPIRED</label>
+
+        <input class="annot-input" type="checkbox" id="an-stnk-exp" value="STNK EXPIRED">
+        <label class="annot-label" for="an-stnk-exp">STNK EXPIRED</label>
+
+        <input class="annot-input" type="checkbox" id="an-kir-exp" value="KIR EXPIRED">
+        <label class="annot-label" for="an-kir-exp">KIR EXPIRED</label>
+
+        <input class="annot-input" type="checkbox" id="an-sim-til" value="SIM TILANG">
+        <label class="annot-label" for="an-sim-til">SIM TILANG</label>
+
+        <input class="annot-input" type="checkbox" id="an-stnk-til" value="STNK TILANG">
+        <label class="annot-label" for="an-stnk-til">STNK TILANG</label>
+
+        <input class="annot-input" type="checkbox" id="an-kir-til" value="KIR TILANG">
+        <label class="annot-label" for="an-kir-til">KIR TILANG</label>
+      </div>
+
+      <!-- Warning banner — shows when any annotation is checked -->
+      <div class="annot-warning" id="annot-warning">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        DOKUMEN BERMASALAH — WAJIB ISI APPROVAL DI BAWAH
+      </div>
+
+      <!-- Approval fields — shown when any annotation is checked -->
+      <div class="annot-approval" id="annot-approval">
+        <input type="text" id="annot-approver" placeholder="Nama pemberi approval (wajib jika ada annotation)..." autocomplete="off">
+      </div>
+    </div>
+
   </div>
 
   <!-- Today's log -->
@@ -815,12 +977,15 @@
             <th>Driver Card</th>
             <th>Type</th>
             <th>Destination</th>
+            <th>Shipment</th>
+            <th>Products</th>
+            <th>Annotation</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody id="log-body">
           <tr>
-            <td colspan="10" style="text-align:center;color:var(--muted);padding:20px;font-size:13px">No entries yet today</td>
+            <td colspan="13" style="text-align:center;color:var(--muted);padding:20px;font-size:13px">No entries yet today</td>
           </tr>
         </tbody>
       </table>
@@ -936,11 +1101,16 @@ function renderLog() {
   count.textContent = `${logs.length} entr${logs.length === 1 ? 'y' : 'ies'}`;
 
   if (logs.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:20px;font-size:13px">No entries yet today</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="13" style="text-align:center;color:var(--muted);padding:20px;font-size:13px">No entries yet today</td></tr>';
     return;
   }
 
-  tbody.innerHTML = logs.slice().reverse().map(e => `
+  tbody.innerHTML = logs.slice().reverse().map(e => {
+    const annotBadges = e.annotations && e.annotations.length
+      ? e.annotations.map(a => `<span style="display:inline-block;background:#2e0a0a;border:1px solid var(--red);color:var(--red);font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;margin:1px">${a}</span>`).join(' ')
+      : '<span style="color:var(--muted)">—</span>';
+    const shipmentVal = e.shipment && e.shipment.length ? e.shipment.join(' + ') : '—';
+    return `
     <tr>
       <td style="font-family:'Share Tech Mono',monospace;color:#9ca3af;font-size:13px">${e.timeIn}</td>
       <td class="plate-cell">${e.plate}</td>
@@ -951,9 +1121,12 @@ function renderLog() {
       <td style="color:#9ca3af">${e.driverCard || '-'}</td>
       <td style="color:#9ca3af">${e.vtype}</td>
       <td style="color:#9ca3af">${e.dest}</td>
+      <td style="color:#4a9eff;font-size:12px">${shipmentVal}</td>
+      <td style="color:var(--muted);font-size:12px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${e.products || ''}">${e.products || '—'}</td>
+      <td>${annotBadges}${e.annotApprover ? `<div style="color:var(--muted);font-size:10px;margin-top:2px">Approval: ${e.annotApprover}</div>` : ''}</td>
       <td><span class="status-in">IN</span></td>
     </tr>
-  `).join('');
+  `}).join('');
 }
 
 renderLog();
@@ -979,6 +1152,15 @@ function submitEntry() {
   const vtypeEl = document.querySelector('input[name="vtype"]:checked');
   const destEl = document.querySelector('input[name="dest"]:checked');
   const simEl = document.querySelector('input[name="simtype"]:checked');
+  const products = document.getElementById('products').value.trim();
+  const details = document.getElementById('details').value.trim();
+  const annotApprover = document.getElementById('annot-approver').value.trim();
+
+  // Collect multi-select shipment
+  const shipment = Array.from(document.querySelectorAll('input[name="shipment"]:checked')).map(el => el.value);
+
+  // Collect multi-select annotations
+  const annotations = Array.from(document.querySelectorAll('.annot-input:checked')).map(el => el.value);
 
   if (!plate) { highlight('plate', 'Please enter license plate'); return; }
   if (!driver) { highlight('driver', 'Please enter driver name'); return; }
@@ -988,6 +1170,10 @@ function submitEntry() {
   if (!driverCard) { highlight('driver-card', 'Please enter driver card number'); return; }
   if (!vtypeEl) { showToastError('Please select vehicle type'); return; }
   if (!destEl) { showToastError('Please select destination'); return; }
+  if (annotations.length > 0 && !annotApprover) {
+    highlight('annot-approver', 'Wajib isi nama approver jika ada annotation dokumen bermasalah');
+    return;
+  }
 
   const entry = {
     id: Date.now(),
@@ -1002,6 +1188,11 @@ function submitEntry() {
     driverCard: driverCard,
     vtype: vtypeEl.value,
     dest: destEl.value,
+    shipment: shipment,
+    products: products,
+    details: details,
+    annotations: annotations,
+    annotApprover: annotApprover,
     timeOut: '',
     duration: '',
     post: 'Post 7'
@@ -1055,10 +1246,28 @@ function resetForm() {
   document.getElementById('company').value = '';
   document.getElementById('ktp').value = '';
   document.getElementById('driver-card').value = '';
+  document.getElementById('products').value = '';
+  document.getElementById('details').value = '';
+  document.getElementById('annot-approver').value = '';
   document.querySelectorAll('input[name="simtype"]').forEach(r => r.checked = false);
   document.querySelectorAll('input[name="vtype"]').forEach(r => r.checked = false);
   document.querySelectorAll('input[name="dest"]').forEach(r => r.checked = false);
+  document.querySelectorAll('input[name="shipment"]').forEach(r => r.checked = false);
+  document.querySelectorAll('.annot-input').forEach(r => r.checked = false);
+  toggleAnnotPanel();
 }
+
+// ---- ANNOTATION PANEL TOGGLE ----
+function toggleAnnotPanel() {
+  const anyChecked = document.querySelectorAll('.annot-input:checked').length > 0;
+  document.getElementById('annot-warning').classList.toggle('show', anyChecked);
+  document.getElementById('annot-approval').classList.toggle('show', anyChecked);
+  if (!anyChecked) document.getElementById('annot-approver').value = '';
+}
+
+document.querySelectorAll('.annot-input').forEach(el => {
+  el.addEventListener('change', toggleAnnotPanel);
+});
 
 // ---- OCR CAMERA ----
 let cameraStream = null;
